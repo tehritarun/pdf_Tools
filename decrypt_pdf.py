@@ -1,4 +1,4 @@
-from PyPDF2 import PdfWriter
+from PyPDF2 import PdfWriter, PdfReader
 import fnmatch
 import os
 
@@ -19,30 +19,33 @@ def get_and_validate_input(pdf_dict: dict) -> list:
     valid_input = False
     while not valid_input:
         try:
-            choice = input("please enter index in order:[eg. 1,3,2]:")
-            listpdf = []
-            for pdf_index in choice.split(","):
-                listpdf.append(pdf_dict[int(pdf_index.strip())])
+            choice = input("please select index of file:")
+            pdffile = pdf_dict[int(choice.strip())]
             valid_input = True
         except:
             print("invalid input. try again")
-    return listpdf
+    return pdffile
 
 
-def merge_pdf(pdf_list: list):
-    merger = PdfWriter()
-    for pdf in pdf_list:
-        merger.append(pdf)
-    merger.write("merged_pdf.pdf")
-    merger.close()
+def decryptpdf(pdffile):
+    reader = PdfReader(pdffile)
+    writer = PdfWriter()
+    if reader.is_encrypted():
+        passwd = input(f"please enter password for {pdffile}:")
+        reader.decrypt(passwd)
+    for page in reader.pages:
+        writer.add_page(page)
+
+    with open(f"unlocked_{pdffile}", "wb") as f:
+        writer.write(f)
 
 
 def main():
     file_dict = scan_folder()
     if len(file_dict.keys()) != 0:
-        pdf_list = get_and_validate_input(file_dict)
-        # print(pdf_list)
-        merge_pdf(pdf_list)
+        pdffile = get_and_validate_input(file_dict)
+        # print(pdffile)
+        decryptpdf(pdffile)
     else:
         print("No pdf found!")
 
