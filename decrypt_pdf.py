@@ -30,7 +30,7 @@ def get_and_validate_input(pdf_dict: dict) -> list:
 def decryptpdf(pdffile):
     reader = PdfReader(pdffile)
     writer = PdfWriter()
-    if reader.is_encrypted():
+    if reader.is_encrypted:
         passwd = input(f"please enter password for {pdffile}:")
         reader.decrypt(passwd)
     for page in reader.pages:
@@ -42,12 +42,14 @@ def decryptpdf(pdffile):
 
 def main():
     file_dict = scan_folder()
-    if len(file_dict.keys()) != 0:
-        pdffile = get_and_validate_input(file_dict)
-        # print(pdffile)
-        decryptpdf(pdffile)
-    else:
+    if len(file_dict.keys()) == 0:
         print("No pdf found!")
+        exit()
+    elif len(file_dict.keys()) == 1:
+        pdffile = file_dict[1]
+    else:
+        pdffile = get_and_validate_input(file_dict)
+    decryptpdf(pdffile)
 
 
 if __name__ == "__main__":
