@@ -28,21 +28,21 @@ def main_window(Operation_name: str):
     up_button = Button(
         root, text="up", width=20, command=lambda: update_listbox(flist, True)
     )
-    up_button.grid(row=0, column=1, padx=10)
+    up_button.grid(row=0, column=0, padx=10)
 
     down_button = Button(
         root, text="down", width=20, command=lambda: update_listbox(flist, False)
     )
-    down_button.grid(row=1, column=1, padx=10)
+    down_button.grid(row=1, column=0, padx=10)
 
     remove_button = Button(
         root, text="Remove", width=20, command=lambda: remove_from_listbox(flist)
     )
-    remove_button.grid(row=2, column=1, padx=10)
+    remove_button.grid(row=2, column=0, padx=10)
 
     # listbox
     flist = Listbox(root, bg="grey", width=50)
-    flist.grid(row=0, column=0, rowspan=3, padx=10)
+    flist.grid(row=0, column=1, rowspan=3, padx=10, pady=10)
 
     # main buttons
     if Operation_name.lower() == "merge":
@@ -50,24 +50,22 @@ def main_window(Operation_name: str):
             root,
             text="Merge",
             width=20,
-            pady=20,
             command=lambda: pdf.merge_pdf(flist.get(0, END)),
         )
     elif Operation_name.lower() == "decrypt":
         label = Label(root, text="Enter Password")
         label.grid(row=3, column=0)
-        passwd_entry = Entry(root)
-        passwd_entry.grid(row=3, column=1)
+        passwd_entry = Entry(root, width=50)
+        passwd_entry.grid(row=3, column=1, pady=10, padx=10)
         submit_button = Button(
             root,
             text="Unlock",
             width=20,
-            pady=20,
             command=lambda: pdf.decryptpdf(
                 flist.selection_get(), passwd=passwd_entry.get()
             ),
         )
-    submit_button.grid(row=4, column=0, columnspan=2)
+    submit_button.grid(row=4, column=1, columnspan=2, pady=10)
 
     file_dict = pdf.scan_folder()
     for item in file_dict.items():
@@ -78,13 +76,14 @@ def main_window(Operation_name: str):
 
 def Home_Window():
     Win = Tk()
+    Win.geometry("500x300")
     pdf_operation = IntVar()
     r1 = Radiobutton(Win, text="Merge PDFs", variable=pdf_operation, value=1)
-    r1.pack()
+    r1.pack(pady=10)
     r2 = Radiobutton(Win, text="Unlock PDF", variable=pdf_operation, value=2)
-    r2.pack()
+    r2.pack(pady=10)
     submit_button = Button(Win, text="Submit", width="20", command=Win.destroy)
-    submit_button.pack()
+    submit_button.pack(pady=10)
     Win.mainloop()
     return pdf_operation.get()
 

@@ -20,6 +20,7 @@ def merge_pdf(pdf_list: list):
         merger.append(pdf)
     merger.write("merged_pdf.pdf")
     merger.close()
+    quit()
 
 
 def decryptpdf(pdffile, passwd):
@@ -32,3 +33,4 @@ def decryptpdf(pdffile, passwd):
 
     with open(f"unlocked_{pdffile}", "wb") as f:
         writer.write(f)
+    quit()
