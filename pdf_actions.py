@@ -22,11 +22,13 @@ def merge_pdf(pdf_list: list):
     merger.close()
 
 
-def decryptpdf(pdffile):
+def decryptpdf(pdffile, passwd):
     reader = PdfReader(pdffile)
     writer = PdfWriter()
     if reader.is_encrypted:
-        passwd = input(f"please enter password for {pdffile}:")
         reader.decrypt(passwd)
     for page in reader.pages:
         writer.add_page(page)
+
+    with open(f"unlocked_{pdffile}", "wb") as f:
+        writer.write(f)
