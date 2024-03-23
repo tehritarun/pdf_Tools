@@ -8,7 +8,6 @@ def scan_folder() -> dict:
     print(os.path.abspath("."))
     for _, _, files in os.walk("."):
         pdfs = fnmatch.filter(files, "*.pdf")
-        # print(f"files>>:{files}")
         for index, pdf in enumerate(pdfs, start=1):
             print(f"{index}. -> {pdf}")
             pdf_dict[index] = pdf
@@ -41,7 +40,6 @@ def main():
     file_dict = scan_folder()
     if len(file_dict.keys()) != 0:
         pdf_list = get_and_validate_input(file_dict)
-        # print(pdf_list)
         merge_pdf(pdf_list)
     else:
         print("No pdf found!")
