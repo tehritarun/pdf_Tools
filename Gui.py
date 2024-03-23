@@ -2,7 +2,11 @@ import tkinter
 import pdf_actions as pdf
 
 
-def update_listbox(listbox: tkinter.Listbox, moveup: bool):
+def update_listbox(listbox: tkinter.Listbox, moveup: bool, label: tkinter.Label):
+    if len(listbox.curselection()) == 0:
+        label.config(text="Please select a File first!")
+        return
+    label.config(text="")
     value = listbox.selection_get()
     total = len(listbox.get(0, tkinter.END))
     index = listbox.curselection()[0]
@@ -26,17 +30,17 @@ def main_window(Operation_name: str):
 
     # Side buttons
     up_button = tkinter.Button(
-        root, text="up", width=20, command=lambda: update_listbox(flist, True)
+        root, text="MOVE UP", width=20, command=lambda: update_listbox(flist, True, err_label)
     )
     up_button.grid(row=0, column=0, padx=10)
 
     down_button = tkinter.Button(
-        root, text="down", width=20, command=lambda: update_listbox(flist, False)
+        root, text="MOVE DOWN", width=20, command=lambda: update_listbox(flist, False, err_label)
     )
     down_button.grid(row=1, column=0, padx=10)
 
     remove_button = tkinter.Button(
-        root, text="Remove", width=20, command=lambda: remove_from_listbox(flist)
+        root, text="REMOVE", width=20, command=lambda: remove_from_listbox(flist)
     )
     remove_button.grid(row=2, column=0, padx=10)
 
@@ -44,28 +48,31 @@ def main_window(Operation_name: str):
     flist = tkinter.Listbox(root, bg="grey", width=50)
     flist.grid(row=0, column=1, rowspan=3, padx=10, pady=10)
 
+    err_label = tkinter.Label(root, text="", fg='red')
+    err_label.grid(row=3, column=1, columnspan=2)
+
     # main buttons
     if Operation_name.lower() == "merge":
         submit_button = tkinter.Button(
             root,
-            text="Merge",
+            text="MERGE",
             width=20,
             command=lambda: pdf.merge_pdf(flist.get(0, tkinter.END)),
         )
     elif Operation_name.lower() == "decrypt":
         label = tkinter.Label(root, text="Enter Password")
-        label.grid(row=3, column=0)
+        label.grid(row=4, column=0)
         passwd_entry = tkinter.Entry(root, width=50)
-        passwd_entry.grid(row=3, column=1, pady=10, padx=10)
+        passwd_entry.grid(row=4, column=1, pady=10, padx=10)
         submit_button = tkinter.Button(
             root,
-            text="Unlock",
+            text="UNLOCK",
             width=20,
             command=lambda: pdf.decryptpdf(
                 flist.selection_get(), passwd=passwd_entry.get()
             ),
         )
-    submit_button.grid(row=4, column=1, columnspan=2, pady=10)
+    submit_button.grid(row=5, column=1, columnspan=2, pady=10)
 
     file_dict = pdf.scan_folder()
     for item in file_dict.items():
