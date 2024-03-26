@@ -2,28 +2,22 @@ import tkinter as tk
 import pdf_actions as pdf
 
 
-class app(tk.Tk):
+class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("PDF Tools")
         self.iconbitmap("assets\\icon_pdf_tool.ico")
         self.geometry("500x300")
 
-        self.operation = 'unlock'
-        self.frames = {}
-        self.HomePage = HomePage
-        self.Action = ActionPage
-
-        for F in {HomePage, ActionPage}:
-            frame = F(self)
-            self.frames[F] = frame
-            frame.place(x=0, y=0, relwidth=1, relheight=1)
-
+        self.operation = tk.StringVar()
+        self.operation.set(-1)
         self.show_frame(HomePage)
-        self.mainloop()
 
     def show_frame(self, cont):
-        frame = self.frames[cont]
+        if (self.operation.get() == '-1') and (cont == ActionPage):
+            print("select radio first")
+            return
+        frame = cont(self)
         frame.tkraise()
 
 
@@ -31,25 +25,35 @@ class HomePage(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
-        pdf_operation = tk.StringVar()
-
-        r1 = tk.Radiobutton(self, text="Merge PDFs",
-                            variable=pdf_operation, value="merge")
-        r2 = tk.Radiobutton(self, text="Unlock PDF",
-                            variable=pdf_operation, value="unlock")
+        r1 = tk.Radiobutton(
+            self, text="Merge PDFs", variable=parent.operation, value="merge"
+        )
+        r2 = tk.Radiobutton(
+            self, text="Unlock PDF", variable=parent.operation, value="unlock"
+        )
 
         r1.pack(pady=10)
         r2.pack(pady=10)
 
         TButton(self, "SUBMIT", lambda: parent.show_frame(ActionPage))
+        self.place(x=0, y=0, relwidth=1, relheight=1)
 
 
 class ActionPage(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
-        FilesFrame(self)
-        ActionFrame(self, parent.operation)
+        self.fileframe = FilesFrame(self)
+        self.actionframe = ActionFrame(self, parent.operation.get())
+        self.place(x=0, y=0, relwidth=1, relheight=1)
+
+    def call_pdf_action(self, action):
+        match action.lower():
+            case "merge":
+                pdf.merge_pdf(self.fileframe.list.get(0, tk.END))
+            case "unlock":
+                pdf.decryptpdf(self.fileframe.list.selection_get(),
+                               passwd=self.actionframe.entry.get())
 
 
 class FilesFrame(tk.Frame):
@@ -102,7 +106,9 @@ class FilesFrame(tk.Frame):
         self.list.selection_set(index)
 
     # fuction to populate listbox
-    def populate_listbox(self, ):
+    def populate_listbox(
+        self,
+    ):
         files = pdf.scan_folder()
         for file in files.items():
             self.list.insert(file[0], file[1])
@@ -117,19 +123,22 @@ class ActionFrame(tk.Frame):
     def __init__(self, parent, actionName: str):
         super().__init__(parent)
 
+        self.entry = None
+
         if actionName.upper() != "MERGE":
             frame_1 = tk.Frame(self)
             label = tk.Label(frame_1, text="Enter Password")
-            entry = tk.Entry(frame_1, width=50)
+            self.entry = tk.Entry(frame_1, width=50)
 
             label.place(x=0, rely=0.4, relwidth=0.4)
-            entry.place(relx=0.4, rely=0.4, relwidth=0.5)
+            self.entry.place(relx=0.4, rely=0.4, relwidth=0.5)
 
             frame_1.pack(expand=True, fill="both")
 
         frame_2 = tk.Frame(self)
 
-        TButton(frame_2, actionName.upper(), lambda: print("button pressed"))
+        TButton(frame_2, actionName.upper(),
+                lambda: parent.call_pdf_action(actionName))
 
         frame_2.pack(expand=True, fill="both")
 
@@ -144,4 +153,5 @@ class TButton(tk.Button):
 
 
 if __name__ == "__main__":
-    app()
+    app = App()
+    app.mainloop()
