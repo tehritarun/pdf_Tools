@@ -26,7 +26,9 @@ def remove_from_listbox(listbox: tkinter.Listbox):
 
 def main_window(Operation_name: str):
     root = tkinter.Tk()
+    root.title('PDF Tool')
     root.geometry("500x300")
+    root.iconbitmap('assets\\icon_pdf_tool.ico')
 
     # Side buttons
     up_button = tkinter.Button(
@@ -83,7 +85,11 @@ def main_window(Operation_name: str):
 
 def Home_Window():
     Win = tkinter.Tk()
+
+    Win.title('PDF Tool')
     Win.geometry("500x300")
+    Win.iconbitmap('assets\\icon_pdf_tool.ico')
+
     pdf_operation = tkinter.IntVar()
     r1 = tkinter.Radiobutton(Win, text="Merge PDFs",
                              variable=pdf_operation, value=1)
