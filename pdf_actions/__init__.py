@@ -3,7 +3,7 @@ import fnmatch
 import os
 from datetime import datetime
 
-timestamp = datetime.now().strftime('%Y%m%d_%H%M')
+timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
 def scan_folder() -> dict:
