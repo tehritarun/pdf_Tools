@@ -150,8 +150,3 @@ class TButton(tk.Button):
         super().__init__(parent, text=text, width=20, command=command_function)
 
         self.pack(padx=20, expand=True)
-
-
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
