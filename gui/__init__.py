@@ -14,7 +14,7 @@ class App(tk.Tk):
         self.show_frame(HomePage)
 
     def show_frame(self, cont):
-        if (self.operation.get() == '-1') and (cont == ActionPage):
+        if (self.operation.get() == "-1") and (cont == ActionPage):
             print("select radio first")
             return
         frame = cont(self)
@@ -48,12 +48,12 @@ class ActionPage(tk.Frame):
         self.place(x=0, y=0, relwidth=1, relheight=1)
 
     def call_pdf_action(self, action):
-        match action.lower():
-            case "merge":
-                pdf.merge_pdf(self.fileframe.list.get(0, tk.END))
-            case "unlock":
-                pdf.decryptpdf(self.fileframe.list.selection_get(),
-                               passwd=self.actionframe.entry.get())
+        if action.lower() == "merge":
+            pdf.merge_pdf(self.fileframe.list.get(0, tk.END))
+        elif action.lower() == "unlock":
+            pdf.decryptpdf(
+                self.fileframe.list.selection_get(), passwd=self.actionframe.entry.get()
+            )
 
 
 class FilesFrame(tk.Frame):
@@ -137,8 +137,7 @@ class ActionFrame(tk.Frame):
 
         frame_2 = tk.Frame(self)
 
-        TButton(frame_2, actionName.upper(),
-                lambda: parent.call_pdf_action(actionName))
+        TButton(frame_2, actionName.upper(), lambda: parent.call_pdf_action(actionName))
 
         frame_2.pack(expand=True, fill="both")
 
