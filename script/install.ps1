@@ -1,22 +1,20 @@
-$installPath= ([Environment]::GetFolderPath("MyDocuments"))
+$installPath = ([Environment]::GetFolderPath("MyDocuments"))
 
 Write-Host "Installation will be done on below path:\n $installPath"
-$resp=Read-Host -Prompt "Press ENTER to continue or enter custom path:"
+$resp = Read-Host -Prompt "Press ENTER to continue or enter custom path:"
 
-if ($resp -ne "")
-{
-    if (Test-Path -LiteralPath $resp)
-    {
+if ($resp -ne "") {
+    if (Test-Path -LiteralPath $resp) {
         Write-Host "Valid path"
-        $installPath=$resp
-    } else
-    {
+        $installPath = $resp
+    }
+    else {
         Write-Host "invalid path"
         exit
     }
 }
 
-$installPath="$installPath"
+$installPath = "$installPath"
 Write-Host "installing at $installPath"
 
 mkdir $installPath

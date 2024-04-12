@@ -1,5 +1,5 @@
 param(
-    [string]$fpath=$null
+    [string]$fpath = $null
 )
 
 New-Item -Path 'Registry::HKEY_CLASSES_ROOT\Directory\Background\shell\PDF Tools'
