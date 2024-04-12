@@ -22,10 +22,10 @@ Set-Location $installPath
 
 git clone https://github.com/tehritarun/pdf_Actions.git
 
-Set-Location .\pdf_actions
+Set-Location .\pdf_Tools
 
 pipenv install
 
-powershell.exe -File .\script\updateresgistry.ps1 "$installPath\pdf_actions"
+powershell.exe -File .\script\updateresgistry.ps1 "$installPath\pdf_Tools"
 
 
